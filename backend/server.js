@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const Market = require('./models/Market'); // Ensure correct import
+const Market = require('./models/Market'); 
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors()); // Enable CORS
+app.use(cors()); 
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -20,21 +20,19 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error('Failed to connect to MongoDB', err);
 });
 
-// Route to handle retrieving data
 app.get('/api/ret-data', async (req, res) => {
   try {
-    const retrieveData = await Market.find(); // Use the correct model
+    const retrieveData = await Market.find();
     res.json(retrieveData);
   } catch (err) {
     console.error('Error retrieving data:', err);
-    res.status(500).json({ error: 'Error retrieving data' }); // Send JSON error response
+    res.status(500).json({ error: 'Error retrieving data' }); 
   }
 });
 
-// Route to handle creating new market
 app.post('/api/data', async (req, res) => {
   const { Description, numOptions, Options } = req.body;
-  console.log('Received request:', req.body); // Log received data
+  console.log('Received request:', req.body); 
 
   const newMarket = new Market({ Description, numOptions, Options });
 
