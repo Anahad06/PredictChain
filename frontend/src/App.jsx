@@ -5,6 +5,8 @@ import Home from './components/Home';
 import CreateMarket from './components/CreateMarket';
 import PlaceBet from './components/PlaceBet';
 import MarketStatus from './components/MarketStatus';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <li><Link to="/create-market">Create Market</Link></li>
             <li><Link to="/place-bet">Place Bet</Link></li>
             <li><Link to="/market-status">Market Status</Link></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup">Signup</Link></li>
           </ul>
         </nav>
         <Routes>
@@ -23,6 +27,8 @@ function App() {
           <Route path="/create-market" element={<CreateMarket />} />
           <Route path="/place-bet" element={<PlaceBet />} />
           <Route path="/market-status" element={<MarketStatus />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </div>

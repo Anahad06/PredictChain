@@ -1,12 +1,12 @@
 import React from 'react';
 
-function Home() {
+const Home = () => {
   return (
-    <div className="container">
-      <h1>Welcome to PredictChain</h1>
+    <div>
+      <h2>Welcome to PredictChain</h2>
       <p>Select a feature from the navigation bar to get started.</p>
     </div>
   );
-}
+};
 
 export default Home;

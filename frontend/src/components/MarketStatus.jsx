@@ -29,7 +29,7 @@ function MarketStatus() {
       <ul>
         {marketData.map((market, index) => (
           <li key={index}>
-            <h3>{market.Description}, Market ID: {market.marketId}</h3>
+            <h3>{market.Description}, Market ID: {market._id}</h3>
             <p>Number of Options: {market.numOptions}</p>
             <ul>
               {market.Options.map((option, i) => (
