@@ -6,17 +6,24 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      console.error('Passwords do not match');
+      alert('Passwords do not match');
       return;
     }
+
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', { username, email, password });
+      const response = await axios.post('http://localhost:5000/api/signup', {
+        username,
+        email,
+        password,
+        confirmPassword,
+        walletAddress // Ensure this is sent
+      });
       console.log('Signed up:', response.data);
-      // Handle success (e.g., redirect, show message, etc.)
     } catch (error) {
       console.error('Error signing up:', error);
     }
@@ -24,27 +31,42 @@ const Signup = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label>Username:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </div>
-      <div>
-        <label>Confirm Password:</label>
-        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-      </div>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+      />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <input
+        type="password"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        placeholder="Confirm Password"
+      />
+      <input
+        type="text"
+        value={walletAddress}
+        onChange={(e) => setWalletAddress(e.target.value)}
+        placeholder="Wallet Address"
+      />
       <button type="submit">Signup</button>
     </form>
   );
 };
 
 export default Signup;
+
 
 

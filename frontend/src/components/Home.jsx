@@ -1,12 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import './Home.css';
 
-const Home = () => {
+function Home() {
   return (
-    <div>
-      <h2>Welcome to PredictChain</h2>
-      <p>Select a feature from the navigation bar to get started.</p>
+    <div className="home-container">
+      <h1>Welcome to CryptoBetting...</h1>
+      <p>Select a feature from below to get started.</p>
+      <div className="home-buttons">
+        <Link to="/create-market" className="btn"><span className="text">Create Market</span></Link>
+        <Link to="/place-bet" className="btn"><span className="text">Place Bet</span></Link>
+        <Link to="/market-status" className="btn"><span className="text">Market Status</span></Link>
+      </div>
     </div>
   );
-};
+}
 
 export default Home;

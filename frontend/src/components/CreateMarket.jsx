@@ -30,7 +30,7 @@ function CreateMarket() {
       },
       body: JSON.stringify({
         Description,
-        numOptions: parseInt(NumOptions), // Ensure NumOptions is sent as a number
+        numOptions: parseInt(NumOptions), 
         Options
       })
     })
