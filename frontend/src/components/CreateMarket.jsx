@@ -1,88 +1,88 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import './CreateMarket.css'; 
 
 function CreateMarket() {
-  const [Description, setDescription] = useState('');
-  const [NumOptions, setNumOptions] = useState('');
-  const [Options, setOptions] = useState(['']);
+  const [description, setDescription] = useState('');
+  const [numOptions, setNumOptions] = useState('');
+  const [options, setOptions] = useState([]);
+  const [optionInput, setOptionInput] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleOptionChange = (index, value) => {
-    const newOptions = [...Options];
-    newOptions[index] = value;
-    setOptions(newOptions);
+  const handleOptionAdd = () => {
+    if (optionInput.trim() !== '') {
+      setOptions([...options, optionInput]);
+      setOptionInput('');
+    }
   };
 
-  const addOptionField = () => {
-    setOptions([...Options, '']);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const removeOptionField = (index) => {
-    const newOptions = Options.filter((_, i) => i !== index);
-    setOptions(newOptions);
-  };
+    if (options.length !== parseInt(numOptions)) {
+      setMessage('Number of options does not match the options provided.');
+      return;
+    }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+    const marketData = {
+      description,  // Changed Description to description
+      numOptions: parseInt(numOptions),
+      options,
+      bets: {}  // Include the bets field
+    };
 
-    fetch('http://localhost:5000/api/data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        Description,
-        numOptions: parseInt(NumOptions), 
-        Options
-      })
-    })
-    .then(response => {
+    try {
+      const response = await fetch('http://localhost:5000/api/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(marketData)
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json();
-    })
-    .then(data => {
+      const data = await response.json();
       console.log('Data saved:', data);
+      setMessage('Market created successfully');
       setDescription('');
       setNumOptions('');
-      setOptions(['']);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      setOptions([]);
+    } catch (error) {
+      console.error('Error saving data:', error);
+      setMessage('Error creating market');
+    }
   };
 
   return (
     <div className="container">
       <h1>Create Market</h1>
       <form onSubmit={handleSubmit}>
-        <label>Description</label>
-        <input
-          type="text"
-          value={Description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+        <input 
+          type="text" 
+          placeholder="Description" 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
         />
-        <label>Number of Options</label>
-        <input
-          type="number"
-          value={NumOptions}
-          onChange={(e) => setNumOptions(e.target.value)}
-          placeholder="Num of Options"
+        <input 
+          type="number" 
+          placeholder="Number of Options" 
+          value={numOptions} 
+          onChange={(e) => setNumOptions(e.target.value)} 
         />
-        {Options.map((option, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              placeholder={`Option ${index + 1}`}
-            />
-            <button type="button" onClick={() => removeOptionField(index)}>Remove</button>
-          </div>
-        ))}
-        <button type="button" onClick={addOptionField}>Add Option</button>
-        <button type="submit">Submit</button>
+        <input 
+          type="text" 
+          placeholder="Option" 
+          value={optionInput} 
+          onChange={(e) => setOptionInput(e.target.value)} 
+        />
+        <button type="button" onClick={handleOptionAdd}>Add Option</button>
+        <ul>
+          {options.map((option, index) => (
+            <li key={index}>{option}</li>
+          ))}
+        </ul>
+        <button type="submit">Create Market</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }

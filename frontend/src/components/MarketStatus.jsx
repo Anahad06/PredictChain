@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './MarketStatus.css';
 
 function MarketStatus() {
   const [marketData, setMarketData] = useState([]);
@@ -24,16 +25,16 @@ function MarketStatus() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="market-status-container">
       <h1>Market Status</h1>
-      <ul>
+      <ul className="market-list">
         {marketData.map((market, index) => (
-          <li key={index}>
+          <li key={index} className="market-item">
             <h3>{market.Description}, Market ID: {market._id}</h3>
             <p>Number of Options: {market.numOptions}</p>
             <ul>
               {market.Options.map((option, i) => (
-                <li key={i}>{option}</li>
+                <li key={i} className="market-option">{option}</li>
               ))}
             </ul>
           </li>
