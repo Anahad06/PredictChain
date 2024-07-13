@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './MarketStatus.css';
 
 function MarketStatus() {
@@ -25,18 +26,14 @@ function MarketStatus() {
   }, []);
 
   return (
-    <div className="market-status-container">
+    <div className="container">
       <h1>Market Status</h1>
-      <ul className="market-list">
+      <ul>
         {marketData.map((market, index) => (
-          <li key={index} className="market-item">
-            <h3>{market.Description}, Market ID: {market._id}</h3>
-            <p>Number of Options: {market.numOptions}</p>
-            <ul>
-              {market.Options.map((option, i) => (
-                <li key={i} className="market-option">{option}</li>
-              ))}
-            </ul>
+          <li key={index}>
+            <Link to={`/market/${market._id}`}>
+              <h3>{market.description}</h3>
+            </Link>
           </li>
         ))}
       </ul>

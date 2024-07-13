@@ -5,6 +5,7 @@ import Home from './components/Home';
 import CreateMarket from './components/CreateMarket';
 import PlaceBet from './components/PlaceBet';
 import MarketStatus from './components/MarketStatus';
+import MarketDetail from './components/MarketDetail';
 import Login from './components/Login';
 import Signup from './components/Signup';
 
@@ -23,12 +24,13 @@ function App() {
           </nav>
         </header>
         <div className="content">
-          {user && <p>Hi, {user.name}!</p>} {/* Display welcome message */}
+          {user && <p>Hi, {user.username}!</p>} {/* Display welcome message */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create-market" element={<CreateMarket />} />
             <Route path="/place-bet" element={<PlaceBet />} />
             <Route path="/market-status" element={<MarketStatus />} />
+            <Route path="/market/:id" element={<MarketDetail />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<div>404 Not Found</div>} />
