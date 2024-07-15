@@ -1,27 +1,13 @@
 const mongoose = require('mongoose');
 
-const MarketSchema = new mongoose.Schema({
-  description: {
-    type: String,
-    required: true,
-  },
-  numOptions: {
-    type: Number,
-    required: true,
-  },
-  options: {
-    type: [String],
-    required: true,
-  },
-  bets: {
-    type: Map,
-    of: new mongoose.Schema({
-      amount: Number,
-      option: String,
-      walletAddress: String,
-    }),
-    default: {},
-  },
+const marketSchema = new mongoose.Schema({
+  description: String,
+  numOptions: Number,
+  options: [String],
+  password: String, 
+  bets: { type: Map, of: Object, default: {} },
+  resolved: { type: Boolean, default: false },
+  winningOption: { type: String, default: null }
 });
 
-module.exports = mongoose.model('Market', MarketSchema);
+module.exports = mongoose.model('Market', marketSchema);

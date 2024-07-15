@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './CreateMarket.css'; 
+import './CreateMarket.css';
 
 function CreateMarket() {
   const [description, setDescription] = useState('');
   const [numOptions, setNumOptions] = useState('');
   const [options, setOptions] = useState([]);
   const [optionInput, setOptionInput] = useState('');
+  const [password, setPassword] = useState(''); 
   const [message, setMessage] = useState('');
 
   const handleOptionAdd = () => {
@@ -25,10 +26,11 @@ function CreateMarket() {
     }
 
     const marketData = {
-      description,  // Changed Description to description
+      description,
       numOptions: parseInt(numOptions),
       options,
-      bets: {}  // Include the bets field
+      password, // Include password in market data
+      bets: {} 
     };
 
     try {
@@ -46,6 +48,7 @@ function CreateMarket() {
       setDescription('');
       setNumOptions('');
       setOptions([]);
+      setPassword(''); // Reset password field
     } catch (error) {
       console.error('Error saving data:', error);
       setMessage('Error creating market');
@@ -80,6 +83,12 @@ function CreateMarket() {
             <li key={index}>{option}</li>
           ))}
         </ul>
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+        />
         <button type="submit">Create Market</button>
       </form>
       {message && <p>{message}</p>}
@@ -88,3 +97,4 @@ function CreateMarket() {
 }
 
 export default CreateMarket;
+
