@@ -1,42 +1,113 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+.app {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: transparent;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  font-size: 36px; /* Increased font size */
+  font-weight: bold;
+  color: #fff;
+  margin-left: 20px; /* Adjust margin as needed */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar {
+  display: flex;
+  gap: 40px; /* Space between nav links */
+  margin-right: 20px; /* Adjust margin as needed */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.navbar a {
+  color: #AAAAAA;
+  text-decoration: none;
+  font-size: 24px; /* Increased font size */
+  font-family: monospace;
+  transition: color 0.3s;
 }
 
-.card {
-  padding: 2em;
+.navbar a:hover {
+  color: #fff;
 }
 
-.read-the-docs {
-  color: #888;
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 48px; /* Increased font size */
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 24px; /* Increased font size */
+  margin-bottom: 30px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #292629;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn .text {
+  color: #AAAAAA;
+  font-size: 18px;
+  font-family: monospace;
+}
+
+.btn:hover {
+  background: linear-gradient(0deg, #A47CF3, #683FEA);
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
+              inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
+              0px 0px 0px 4px rgba(255, 255, 255, 0.2),
+              0px 0px 180px 0px #9917FF;
+  transform: translateY(-2px);
+}
+
+.btn:hover .text {
+  color: white;
 }
