@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './CreateMarket.css'; 
+import './CreateMarket.css';
 
 function CreateMarket() {
   const [description, setDescription] = useState('');
   const [numOptions, setNumOptions] = useState('');
   const [options, setOptions] = useState([]);
   const [optionInput, setOptionInput] = useState('');
+<<<<<<< HEAD
   const [password, setPassword] = useState('');
+=======
+  const [password, setPassword] = useState(''); 
+>>>>>>> d13a3b1d37b8146b5e9bfd174ab2a1c98e82417f
   const [message, setMessage] = useState('');
 
   const handleOptionAdd = () => {
@@ -26,11 +30,19 @@ function CreateMarket() {
     }
 
     const marketData = {
+<<<<<<< HEAD
       description,  
       numOptions: parseInt(numOptions),
       options,
       bets: {}, 
       password
+=======
+      description,
+      numOptions: parseInt(numOptions),
+      options,
+      password, // Include password in market data
+      bets: {} 
+>>>>>>> d13a3b1d37b8146b5e9bfd174ab2a1c98e82417f
     };
 
     try {
@@ -49,6 +61,7 @@ function CreateMarket() {
       setPassword(''); 
       setNumOptions('');
       setOptions([]);
+      setPassword(''); // Reset password field
     } catch (error) {
       console.error('Error saving data:', error);
       setMessage('Error creating market');
@@ -89,6 +102,12 @@ function CreateMarket() {
             <li key={index}>{option}</li>
           ))}
         </ul>
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+        />
         <button type="submit">Create Market</button>
       </form>
       {message && <p>{message}</p>}
@@ -97,3 +116,4 @@ function CreateMarket() {
 }
 
 export default CreateMarket;
+

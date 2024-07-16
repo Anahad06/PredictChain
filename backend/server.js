@@ -34,6 +34,24 @@ app.get('/api/ret-data', async (req, res) => {
 });
 
 app.get('/api/markets/description/:description', async (req, res) => {
+<<<<<<< HEAD
+=======
+  const description = req.params.description;
+  try {
+    const market = await Market.findOne({ description });
+    if (market) {
+      res.json(market);
+    } else {
+      res.status(404).json({ message: 'Market not found' });
+    }
+  } catch (err) {
+    console.error('Error fetching market data:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/markets/:description', async (req, res) => {
+>>>>>>> d13a3b1d37b8146b5e9bfd174ab2a1c98e82417f
   const description = req.params.description;
   try {
     const market = await Market.findOne({ description });
@@ -80,6 +98,7 @@ app.post('/api/getInfo', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 
 app.post('/api/data', async (req, res) => {
   const { description, numOptions, options, password} = req.body;
@@ -87,14 +106,72 @@ app.post('/api/data', async (req, res) => {
 
   const newMarket = new Market({ description, numOptions, options, password });
 
+=======
+app.get('/api/markets/:id', async (req, res) => {
+  const id = req.params.id;
+>>>>>>> d13a3b1d37b8146b5e9bfd174ab2a1c98e82417f
   try {
-    const savedMarket = await newMarket.save();
-    res.json(savedMarket);
+    const market = await Market.findById(id);
+    if (market) {
+      res.json(market);
+    } else {
+      res.status(404).json({ message: 'Market not found' });
+    }
   } catch (err) {
-    console.error('Error saving data:', err);
-    res.status(500).json({ error: 'Error saving data' });
+    console.error('Error fetching market data:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
+app.post('/api/resolve-market', authRoutes, async (req, res) => {
+  const { description, password, winningOption } = req.body;
+
+  try {
+    const market = await Market.findOne({ description });
+    if (!market) {
+      return res.status(404).json({ message: 'Market not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, market.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Incorrect password' });
+    }
+
+    if (market.resolved) {
+      return res.status(400).json({ message: 'Market is already resolved' });
+    }
+
+    market.resolved = true;
+    market.winningOption = winningOption;
+
+    const totalBetAmount = Object.values(market.bets).reduce((acc, bet) => acc + bet.amount, 0);
+    const totalBetOnWinningOption = Object.values(market.bets).reduce((acc, bet) => {
+      if (bet.option === winningOption) {
+        acc += bet.amount;
+      }
+      return acc;
+    }, 0);
+
+    const winners = Object.entries(market.bets).filter(([email, bet]) => bet.option === winningOption);
+
+    await Promise.all(winners.map(async ([email, bet]) => {
+      const user = await User.findOne({ email: email.replace(/_/g, '.') });
+      if (user) {
+        const winningAmount = (bet.amount / totalBetOnWinningOption) * totalBetAmount;
+        user.winnings = (user.winnings || 0) + winningAmount;
+        await user.save();
+      }
+    }));
+
+    market.description += ' - DISTRIBUTING!';
+    await market.save();
+    res.json({ message: 'Market resolved and bets distributed' });
+  } catch (err) {
+    console.error('Error resolving market:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 app.post('/api/place-bet', async (req, res) => {
   const { marketDescription, email, ethAmount, option, walletAddress } = req.body;
@@ -105,21 +182,18 @@ app.post('/api/place-bet', async (req, res) => {
       return res.status(404).json({ message: 'Market not found' });
     }
 
-    // Replace dots with underscores in the email
     const safeEmail = email.replace(/\./g, '_');
 
-    // Update the market with the bet
     const betDetails = { amount: ethAmount, option, walletAddress };
     market.bets.set(safeEmail, betDetails);
     await market.save();
 
-    // Update the user with the bet
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.bets.push({ market: marketDescription, amount: ethAmount, option });
+    user.bets.push({ market: marketDescription, amount: ethAmount , option });
     await user.save();
 
     res.json({ message: 'Bet placed successfully' });
