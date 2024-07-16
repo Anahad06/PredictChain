@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './MarketStatus.css';
 
 function MarketStatus() {
-  const [markets, setMarkets] = useState([]);
-  const [error, setError] = useState('');
+  const [marketData, setMarketData] = useState([]);
 
-  useEffect(() => {
+  const fetchMarketData = () => {
     fetch('http://localhost:5000/api/ret-data')
       .then(response => {
         if (!response.ok) {
@@ -13,32 +13,27 @@ function MarketStatus() {
         }
         return response.json();
       })
-      .then(data => setMarkets(data))
+      .then(data => {
+        setMarketData(data);
+      })
       .catch(error => {
-        setError('Error fetching data');
         console.error('Error fetching data:', error);
       });
+  };
+
+  useEffect(() => {
+    fetchMarketData();
   }, []);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
-    <div>
+    <div className="container">
       <h1>Market Status</h1>
       <ul>
-<<<<<<< HEAD
         {marketData.map((market, index) => (
           <li key={index}>
             <Link to={`/market/description/${market.description}`}>
               <h3>{market.description}</h3>
             </Link>
-=======
-        {markets.map(market => (
-          <li key={market._id}>
-            <Link to={`/market/${market.description}`}>{market.description}</Link>
->>>>>>> d13a3b1d37b8146b5e9bfd174ab2a1c98e82417f
           </li>
         ))}
       </ul>
