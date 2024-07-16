@@ -29,6 +29,10 @@ const MarketSchema = new mongoose.Schema({
   WinningOption: {
     type: String,
     required: false,
+  }, 
+  resolved: {
+    type: Boolean, 
+    required: false,
   }
 });
 

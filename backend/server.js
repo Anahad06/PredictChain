@@ -5,6 +5,7 @@ const cors = require('cors');
 const Market = require('./models/Market');
 const User = require('./models/User');
 const authRoutes = require('./auth');
+const auth = require('./middleware/auth');
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,65 @@ mongoose.connect(process.env.MONGODB_URI)
   });
 
 app.use('/api', authRoutes);
+
+app.post('/api/signup', async (req, res) => {
+  const { username, email, password, confirmPassword, walletAddress } = req.body;
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      walletAddress
+    });
+
+    await newUser.save();
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(201).json({ message: 'User created successfully', token, user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user', error: error.message });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, user });
+  } catch (error) {
+    res.status(500).json({ message: 'Error logging in', error: error.message });
+  }
+});
+
+app.get('/api/account', auth, async (req, res) => {
+  try {
+    console.log('Fetching user with ID:', req.user.userId);
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 app.get('/api/ret-data', async (req, res) => {
   try {
@@ -42,7 +102,6 @@ app.get('/api/markets/description/:description', async (req, res) => {
       return res.status(404).json({ message: 'Market not found' });
     }
 
-    // Calculate the number of bets per option
     const optionsWithBets = market.options.map(option => {
       const bets = Array.from(market.bets.values()).filter(bet => bet.option === option);
       return { name: option, bets };
@@ -65,42 +124,44 @@ app.post('/api/getInfo', async (req, res) => {
   try {
     let market = await Market.findOne({ description, password });
 
-    if (market) {
-      await Market.updateOne(
-        { description, password },
-        { $set: { WinningOption: WinningOption } }
-      );
+    if (!market) {
+      return res.status(404).json({ message: 'Market not found' });
+    }
 
-      let users = await User.find({ 'bets.market': description });
+    if (market.resolved) {
+      return res.status(400).json({ message: 'Market has already been resolved!' });
+    }
 
-      for (let user of users) {
-        let userWon = false;
-        let totalWinnings = 0;
+    market.WinningOption = WinningOption;
+    market.resolved = true;
+    await market.save();
 
-        for (let bet of user.bets) {
-          if (bet.market === description && bet.option === WinningOption) {
-            totalWinnings += bet.amount; 
-            userWon = true;
-          }
-        }
+    let users = await User.find({ 'bets.market': description });
 
-        if (userWon) {
-          user.ETH = (user.ETH || 0) + totalWinnings; 
-          await user.save(); 
+    for (let user of users) {
+      let userWon = false;
+      let totalWinnings = 0;
+
+      for (let bet of user.bets) {
+        if (bet.market === description && bet.option === WinningOption) {
+          totalWinnings += bet.amount; 
+          userWon = true;
         }
       }
 
-      res.status(200).json({ message: 'Market resolved and users updated successfully' });
-      console.log("API Endpoint for Resolve is Working!");
-    } else {
-      res.status(404).json({ message: 'Market not found' });
+      if (userWon) {
+        user.ETH = (user.ETH || 0) + totalWinnings; 
+        await user.save(); 
+      }
     }
+
+    res.status(200).json({ message: 'Market resolved and users updated successfully' });
+    console.log("API Endpoint for Resolve is Working!");
   } catch (error) {
     console.error("Error with Resolve!", error);
     res.status(500).json({ message: 'Server error' });
   }
 });
-
 
 app.post('/api/data', async (req, res) => {
   const { description, numOptions, options, password} = req.body;
@@ -126,15 +187,12 @@ app.post('/api/place-bet', async (req, res) => {
       return res.status(404).json({ message: 'Market not found' });
     }
 
-    // Replace dots with underscores in the email
     const safeEmail = email.replace(/\./g, '_');
 
-    // Update the market with the bet
     const betDetails = { amount: ethAmount, option, walletAddress };
     market.bets.set(safeEmail, betDetails);
     await market.save();
 
-    // Update the user with the bet
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -150,7 +208,6 @@ app.post('/api/place-bet', async (req, res) => {
   }
 });
 
-// Fetch market by ID
 app.get('/api/markets/:id', async (req, res) => {
   const id = req.params.id;
   try {
@@ -160,7 +217,6 @@ app.get('/api/markets/:id', async (req, res) => {
       return res.status(404).json({ message: 'Market not found' });
     }
 
-    // Calculate the number of bets per option
     const optionsWithBets = market.options.map(option => {
       const numBets = Array.from(market.bets.values()).filter(bet => bet.option === option).length;
       return { name: option, numBets };
