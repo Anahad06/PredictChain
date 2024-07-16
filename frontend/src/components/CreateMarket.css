@@ -1,0 +1,124 @@
+/* Global Styles */
+body, html {
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header Styles */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #000;
+  }
+  
+  .logo {
+    color: #00aaff;
+    font-size: 36px;  /* Increased font size */
+    font-weight: bold;
+  }
+  
+  .navbar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;  /* Increased font size */
+    transition: color 0.3s;
+  }
+  
+  .navbar a:hover {
+    color: #00aaff;
+  }
+  
+  /* Content Styles */
+  .content {
+    text-align: center;
+    padding: 50px;
+    color: #ffffff;
+  }
+  
+  .content h1 {
+    font-size: 48px;  /* Increased font size */
+    margin-bottom: 20px;
+  }
+  
+  .content p {
+    font-size: 24px;  /* Increased font size */
+    margin-bottom: 40px;
+  }
+  
+  .content .btn {
+    padding: 15px 30px;
+    font-size: 20px;  /* Increased font size */
+    color: #ffffff;
+    background-color: #00aaff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .content .btn:hover {
+    background-color: #007acc;
+  }
+  
+  /* Feature Box Styles */
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+  }
+  
+  .feature-box {
+    background-color: #1f1f1f;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+  }
+  
+  .feature-box h3 {
+    font-size: 24px;  /* Increased font size */
+    color: #00aaff;
+    margin-bottom: 10px;
+  }
+  
+  .feature-box p {
+    font-size: 18px;  /* Increased font size */
+    color: #ffffff;
+  }
+  
+  .feature-box .icon {
+    font-size: 36px;  /* Increased icon size */
+    margin-bottom: 10px;
+  }
+  
+  /* Button Group Styles */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  .button-group .btn {
+    padding: 15px 30px;
+    font-size: 20px;  /* Increased font size */
+    color: #ffffff;
+    background-color: #00aaff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .button-group .btn:hover {
+    background-color: #007acc;
+  }
+  

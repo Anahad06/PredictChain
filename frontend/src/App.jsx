@@ -7,11 +7,11 @@ import PlaceBet from './components/PlaceBet';
 import MarketStatus from './components/MarketStatus';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import ResolveMarket from './components/ResolveMarket'; 
-import Account from './components/Account'; 
+import ResolveMarket from './components/ResolveMarket';
+import Account from './components/Account';
 
 function App() {
-  const [user, setUser] = useState(null);   
+  const [user, setUser] = useState(null);
 
   return (
     <Router>
@@ -20,10 +20,12 @@ function App() {
           <div className="logo">PredictChain</div>
           <nav className="navbar">
             <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Sign Up</Link>
             <Link to="/account">Account</Link>
           </nav>
+          <div className="auth-buttons">
+            <Link to="/signup" className="btn register">Register</Link>
+            <Link to="/login" className="btn login">Login</Link>
+          </div>
         </header>
         <div className="content">
           <Routes>
