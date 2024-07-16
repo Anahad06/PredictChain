@@ -5,6 +5,7 @@ function ResolveMarket() {
     const [description, setDescription] = useState(''); 
     const [winningOption, setWinningOption] = useState(''); 
     const [password, setPassword] = useState(''); 
+    const [message, setUpdateMessage] = useState(''); 
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -18,13 +19,14 @@ function ResolveMarket() {
         fetch('http://localhost:5000/api/getInfo', {
             method: "POST", 
             headers: {
-                'Content-Type': 'application/json'  // Correct header key
+                'Content-Type': 'application/json' 
             }, 
             body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
+            setUpdateMessage("Resolved Market!"); 
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -48,6 +50,8 @@ function ResolveMarket() {
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <button type="submit">Submit</button>
+                <br></br>
+                <label>{message}</label>
             </form>
         </div>
     );

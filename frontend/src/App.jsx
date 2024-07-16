@@ -6,8 +6,9 @@ import CreateMarket from './components/CreateMarket';
 import PlaceBet from './components/PlaceBet';
 import MarketStatus from './components/MarketStatus';
 import Login from './components/Login';
-import Signup from './components/Signup'; 
+import Signup from './components/Signup';
 import ResolveMarket from './components/ResolveMarket'; 
+import Account from './components/Account'; 
 
 function App() {
   const [user, setUser] = useState(null);   
@@ -21,6 +22,7 @@ function App() {
             <Link to="/">Home</Link>
             <Link to="/login">Login</Link>
             <Link to="/signup">Sign Up</Link>
+            <Link to="/account">Account</Link>
           </nav>
         </header>
         <div className="content">
@@ -31,7 +33,8 @@ function App() {
             <Route path="/place-bet" element={<PlaceBet />} />
             <Route path="/market-status" element={<MarketStatus />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/signup" element={<Signup setUser={setUser} />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<div>404 Not Found</div>} />
           </Routes>
         </div>
