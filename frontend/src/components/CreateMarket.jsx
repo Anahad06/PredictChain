@@ -7,6 +7,7 @@ function CreateMarket() {
   const [numOptions, setNumOptions] = useState('');
   const [options, setOptions] = useState([]);
   const [optionInput, setOptionInput] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
   const handleOptionAdd = () => {
@@ -25,10 +26,11 @@ function CreateMarket() {
     }
 
     const marketData = {
-      description,  // Changed Description to description
+      description,  
       numOptions: parseInt(numOptions),
       options,
-      bets: {}  // Include the bets field
+      bets: {}, 
+      password
     };
 
     try {
@@ -44,6 +46,7 @@ function CreateMarket() {
       console.log('Data saved:', data);
       setMessage('Market created successfully');
       setDescription('');
+      setPassword(''); 
       setNumOptions('');
       setOptions([]);
     } catch (error) {
@@ -67,6 +70,12 @@ function CreateMarket() {
           placeholder="Number of Options" 
           value={numOptions} 
           onChange={(e) => setNumOptions(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
         />
         <input 
           type="text" 

@@ -22,6 +22,14 @@ const MarketSchema = new mongoose.Schema({
     }),
     default: {},
   },
+  password: {
+    type: String,
+    required: true,
+  },
+  WinningOption: {
+    type: String,
+    required: false,
+  }
 });
 
 module.exports = mongoose.model('Market', MarketSchema);

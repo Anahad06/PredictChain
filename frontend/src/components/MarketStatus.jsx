@@ -31,7 +31,7 @@ function MarketStatus() {
       <ul>
         {marketData.map((market, index) => (
           <li key={index}>
-            <Link to={`/market/${market._id}`}>
+            <Link to={`/market/description/${market.description}`}>
               <h3>{market.description}</h3>
             </Link>
           </li>

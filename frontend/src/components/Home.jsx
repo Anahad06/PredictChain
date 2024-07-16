@@ -11,6 +11,7 @@ function Home() {
         <Link to="/create-market" className="btn"><span className="text">Create Market</span></Link>
         <Link to="/place-bet" className="btn"><span className="text">Place Bet</span></Link>
         <Link to="/market-status" className="btn"><span className="text">Market Status</span></Link>
+        <Link to="/resolve-market" className="btn"><span className="text">Resolve Market</span></Link>
       </div>
     </div>
   );

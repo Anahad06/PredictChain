@@ -33,25 +33,59 @@ app.get('/api/ret-data', async (req, res) => {
   }
 });
 
-app.get('/api/markets/:description', async (req, res) => {
+app.get('/api/markets/description/:description', async (req, res) => {
   const description = req.params.description;
   try {
     const market = await Market.findOne({ description });
-    if (market) {
-      res.json(market);
+
+    if (!market) {
+      return res.status(404).json({ message: 'Market not found' });
+    }
+
+    // Calculate the number of bets per option
+    const optionsWithBets = market.options.map(option => {
+      const bets = Array.from(market.bets.values()).filter(bet => bet.option === option);
+      return { name: option, bets };
+    });
+
+    res.json({
+      description: market.description,
+      numOptions: market.numOptions,
+      options: optionsWithBets,
+    });
+  } catch (err) {
+    console.error('Error retrieving market details:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.post('/api/getInfo', async (req, res) => {
+  const { description, WinningOption, password } = req.body;
+  
+  try {
+    let data = await Market.findOne({ description, password });
+
+    if (data) {
+      await Market.updateOne(
+        { description, password },
+        { $set: { WinningOption: WinningOption } }
+      );
+      res.status(200).json({ message: 'Market updated successfully', market: WinningOption });
+      console.log("API Endpoint for Resolve is Working!");
     } else {
       res.status(404).json({ message: 'Market not found' });
     }
-  } catch (err) {
+  } catch (error) {
+    console.error("Error with Resolve!", error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
+
 app.post('/api/data', async (req, res) => {
-  const { description, numOptions, options } = req.body;
+  const { description, numOptions, options, password} = req.body;
   console.log('Received request:', req.body);
 
-  const newMarket = new Market({ description, numOptions, options });
+  const newMarket = new Market({ description, numOptions, options, password });
 
   try {
     const savedMarket = await newMarket.save();
@@ -91,6 +125,33 @@ app.post('/api/place-bet', async (req, res) => {
     res.json({ message: 'Bet placed successfully' });
   } catch (err) {
     console.error('Error placing bet:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Fetch market by ID
+app.get('/api/markets/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const market = await Market.findById(id);
+
+    if (!market) {
+      return res.status(404).json({ message: 'Market not found' });
+    }
+
+    // Calculate the number of bets per option
+    const optionsWithBets = market.options.map(option => {
+      const numBets = Array.from(market.bets.values()).filter(bet => bet.option === option).length;
+      return { name: option, numBets };
+    });
+
+    res.json({
+      description: market.description,
+      numOptions: market.numOptions,
+      options: optionsWithBets,
+    });
+  } catch (err) {
+    console.error('Error retrieving market details:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
