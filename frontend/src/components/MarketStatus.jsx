@@ -10,7 +10,7 @@ function MarketStatus() {
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
-        }
+        } 
         return response.json();
       })
       .then(data => {
@@ -31,9 +31,12 @@ function MarketStatus() {
       <ul>
         {marketData.map((market, index) => (
           <li key={index}>
-            <Link to={`/market/description/${market.description}`}>
-              <h3>{market.description}</h3>
-            </Link>
+            <div>
+            <h3>NAME: {market.description}</h3>
+            <h3>OPTIONS: {market.options.join(", ")}</h3>
+            <h3>WINNING OPTION: {market.WinningOption}</h3>
+            <br></br>
+            </div>  
           </li>
         ))}
       </ul>
