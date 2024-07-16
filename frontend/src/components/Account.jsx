@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Account = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -15,7 +17,6 @@ const Account = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log('Fetched user data:', response.data);
           setUser(response.data);
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -25,6 +26,13 @@ const Account = () => {
     };
     fetchUserData();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/login');
+  };
 
   if (!user) {
     return <div>{error || 'Please log in to view your account.'}</div>;
@@ -43,6 +51,7 @@ const Account = () => {
           </li>
         ))}
       </ul>
+      <button onClick={handleLogout}>Sign Out</button>
     </div>
   );
 };
