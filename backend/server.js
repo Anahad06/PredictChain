@@ -60,23 +60,47 @@ app.get('/api/markets/description/:description', async (req, res) => {
 });
 
 app.post('/api/getInfo', async (req, res) => {
-  const {description, WinningOption, password} = req.body;
+  const { description, WinningOption, password } = req.body;
   
   try {
-    let data = await Market.findOne({description, password});
+    let market = await Market.findOne({ description, password });
 
-    if (data){
-      await Market.updateOne({description, password}, WinningOption); 
-      res.status(200).json({ message: 'Market updated successfully', market: WinningOption });
-      console.log("API Endpoint for Resolve is Working!"); 
+    if (market) {
+      await Market.updateOne(
+        { description, password },
+        { $set: { WinningOption: WinningOption } }
+      );
 
+      let users = await User.find({ 'bets.market': description });
+
+      for (let user of users) {
+        let userWon = false;
+        let totalWinnings = 0;
+
+        for (let bet of user.bets) {
+          if (bet.market === description && bet.option === WinningOption) {
+            totalWinnings += bet.amount; 
+            userWon = true;
+          }
+        }
+
+        if (userWon) {
+          user.ETH = (user.ETH || 0) + totalWinnings; 
+          await user.save(); 
+        }
+      }
+
+      res.status(200).json({ message: 'Market resolved and users updated successfully' });
+      console.log("API Endpoint for Resolve is Working!");
+    } else {
+      res.status(404).json({ message: 'Market not found' });
     }
+  } catch (error) {
+    console.error("Error with Resolve!", error);
+    res.status(500).json({ message: 'Server error' });
   }
-  catch {
-    console.log("Error with Resolve!"); 
-  }
+});
 
-})
 
 app.post('/api/data', async (req, res) => {
   const { description, numOptions, options, password} = req.body;
