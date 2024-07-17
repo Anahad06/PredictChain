@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './MarketStatus.css';
 
 function MarketStatus() {
@@ -10,7 +9,7 @@ function MarketStatus() {
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
-        } 
+        }
         return response.json();
       })
       .then(data => {
@@ -27,19 +26,16 @@ function MarketStatus() {
 
   return (
     <div className="container">
-      <h1>Market Status</h1>
-      <ul>
+      <h1 className="title">Recent Markets</h1>
+      <div className="market-list">
         {marketData.map((market, index) => (
-          <li key={index}>
-            <div>
-            <h3>NAME: {market.description}</h3>
-            <h3>OPTIONS: {market.options.join(", ")}</h3>
-            <h3>WINNING OPTION: {market.WinningOption}</h3>
-            <br></br>
-            </div>  
-          </li>
+          <div key={index} className="market-item">
+            <h2 className="market-name">{market.description}</h2>
+            <h2 className="market-options">Options: {market.options.join(", ")}</h2>
+            <h2 className="market-winning-option">Winning Option: {market.WinningOption}</h2>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

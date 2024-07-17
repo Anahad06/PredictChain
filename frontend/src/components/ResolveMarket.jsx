@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CreateMarket.css'; 
+import './ResolveMarket.css'; 
 
 function ResolveMarket() {
     const [description, setDescription] = useState(''); 
@@ -30,6 +30,7 @@ function ResolveMarket() {
         })
         .catch((error) => {
             console.error('Error:', error);
+            setUpdateMessage("Error resolving market");
         });
     }
 
@@ -37,21 +38,26 @@ function ResolveMarket() {
         <div className='container'>
             <h1>Resolve Market</h1>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Market Name</label>
-                    <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-                </div>
-                <div>
-                    <label>Winning Option</label>
-                    <input type="text" value={winningOption} onChange={(e) => setWinningOption(e.target.value)} />
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
+                <input
+                    type="text"
+                    placeholder="Market Name"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Winning Option"
+                    value={winningOption}
+                    onChange={(e) => setWinningOption(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <button type="submit">Submit</button>
-                <br></br>
-                <label>{message}</label>
+                {message && <p>{message}</p>}
             </form>
         </div>
     );
