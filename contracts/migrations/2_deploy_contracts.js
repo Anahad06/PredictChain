@@ -1,5 +1,5 @@
 const PredictionMarket = artifacts.require("PredictionMarket");
 
 module.exports = function (deployer) {
-  deployer.deploy(PredictionMarket);
+  deployer.deploy(PredictionMarket, "Hello World");
 };

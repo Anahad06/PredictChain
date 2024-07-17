@@ -42,6 +42,11 @@ body {
   text-decoration: none;
 }
 
+.navbar a:hover{
+  color: #007acc;
+  cursor: pointer;
+}
+
 .auth-buttons {
   display: flex;
   gap: 30px;
